@@ -1,10 +1,15 @@
 import ".././App.css";
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
-import { InputField, GuestFunction, Calendar } from "../components/Components";
+import {
+  InputField,
+  GuestFunction,
+  Calendar,
+  Time,
+  LinkButton,
+} from "../components/Components";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { LinkButton } from "../components/Components";
 
 const OrderGrid = styled.div`
   display: grid;
@@ -30,20 +35,22 @@ const OrderContentGrid = styled.div`
     "head head"
     "calendar g-text"
     "calendar guest"
-    ". input"
+    "time input"
     "time next";
 `;
 const CalendarBox = styled.div`
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   color: var(--clr-secondary);
   grid-area: calendar;
   align-self: center;
 `;
 const TimeBox = styled.div`
-  display: grid;
+  display: flex;
+  flex-direction: column;
   color: var(--clr-secondary);
   grid-area: time;
-  align-self: center;
 `;
 const GuestTextBox = styled.div`
   display: grid;
@@ -76,20 +83,22 @@ const NextBox = styled.div`
 
 function Order() {
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const [isDisabled, setIsDisabled] = useState(true);
+  const [startDate, setStartDate] = useState(null);
+  const [startTime, setStartTime] = useState(null);
   const handleChange = (e) => {
     setEmail(e.target.value);
+    verifyEmail();
   };
   const verifyEmail = () => {
     const regEx = /[a-zA-Z0-9.%+-]+@[a-z0-9]+\.[a-z]{2,8}(.[a-z{2,8}])?/g;
-    if (regEx.test(email)) {
-      setMessage("Email is valid");
-    } else if (!regEx.test(email) && email !== "") {
-      setMessage("Email is not valid");
+    if (regEx.test(email) && startDate !== null && startTime !== null) {
+      setIsDisabled(false);
     } else {
-      setMessage("");
+      setIsDisabled(true);
     }
   };
+
   return (
     <OrderGrid>
       <Header />
@@ -98,10 +107,14 @@ function Order() {
           <h2>Just a few last things</h2>
         </HeaderBox>
         <CalendarBox>
-          <h2>Please select a date.</h2>
+          <h2>When do you want your table?</h2>
           <Calendar />
         </CalendarBox>
-        <TimeBox></TimeBox>
+        <TimeBox>
+          <h2>At what time do you want your table?</h2>
+          <p>We close at 23:00 so the last available table is at 22:00</p>
+          <Time />
+        </TimeBox>
         <GuestTextBox>
           <h2>Please select number of guests</h2>
         </GuestTextBox>
@@ -118,8 +131,8 @@ function Order() {
           />
         </InputBox>
         <NextBox>
-          <Link to="/Receipt">
-            <LinkButton onClick={verifyEmail}>Finish order</LinkButton>
+          <Link to={"/Receipt"}>
+            <LinkButton disabled={isDisabled}>Finish order</LinkButton>
           </Link>
         </NextBox>
       </OrderContentGrid>

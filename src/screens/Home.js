@@ -1,6 +1,7 @@
 import ".././App.css";
 import React from "react";
 import Header from "../components/Header";
+import DemoCarousel from "../components/Carousel";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import {
@@ -16,9 +17,6 @@ import { FaSnapchatGhost } from "react-icons/fa";
 import { FaPhoneAlt } from "react-icons/fa";
 import { FaHome } from "react-icons/fa";
 import { FaAt } from "react-icons/fa";
-import image1 from "../assets/images/food.jpg";
-import image2 from "../assets/images/brewdog.jpg";
-import image3 from "../assets/images/tinypeople.png";
 
 const HomeGrid = styled.div`
   display: grid;
@@ -109,7 +107,7 @@ function Home() {
       <Header />
       <HomeContentGrid>
         <CarouselBox>
-          <CarouselFunction />
+          <DemoCarousel />
         </CarouselBox>
         <OrderBox>
           <h2>Book a table</h2>

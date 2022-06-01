@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { LinkButton } from "./Components";
 
 const Wrapper = styled.div`
@@ -77,7 +77,6 @@ const DishApi = () => {
       "https://themealdb.com/api/json/v1/1/random.php"
     );
     setDishes(result.data.meals);
-    console.log(dishes);
   };
 
   useEffect(() => {
@@ -95,15 +94,17 @@ const DishApi = () => {
   return (
     <Wrapper>
       {dishes.map((dish) => (
-        <DishInfo key={dish.idMeal}>
+        <DishInfo key={dish.idMeal} selected={true}>
           <MealThumb>
             <MealImg src={dish.strMealThumb} />
           </MealThumb>
           <Meal>{dish.strMeal}</Meal>
           <Category>{dish.strCategory}</Category>
           <Origin>{dish.strArea}</Origin>
+          {localStorage.setItem("Dishes", JSON.stringify(dish.strMeal))}
         </DishInfo>
       ))}
+
       <DishButton>
         <LinkButton onClick={() => getDishes(useEffect)}>New Dish</LinkButton>
       </DishButton>

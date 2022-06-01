@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
-import "react-modern-calendar-datepicker/lib/DatePicker.css";
-import DatePicker from "react-modern-calendar-datepicker";
+import Order from "../screens/Order";
+import DatePicker from "react-datepicker";
+import subDays from "date-fns/subDays";
+import setHours from "date-fns/setHours";
+import setMinutes from "date-fns/setMinutes";
+import "react-datepicker/dist/react-datepicker.css";
 import { FaArrowCircleLeft } from "react-icons/fa";
 import { FaArrowCircleRight } from "react-icons/fa";
 import ".././App.css";
@@ -47,6 +51,15 @@ export const LinkButton = styled.button`
   &:hover {
     background-color: var(--clr-hover);
   }
+  ${({ disabled }) =>
+    disabled &&
+    css`
+      background-color: blue;
+      cursor: default;
+      &:hover {
+        background-color: blue;
+      }
+    `}
 `;
 
 export const InputField = styled.input`
@@ -77,17 +90,30 @@ export const GuestButton = styled.button`
   }
 `;
 
-export const Calendar = () => {
-  const [selectedDay, setSelectedDay] = useState(null);
+export function Calendar(startDate, setStartDate) {
   return (
     <DatePicker
-      value={selectedDay}
-      onChange={setSelectedDay}
-      inputPlaceholder="Select a day"
-      shouldHighlightWeekends
+      selected={startDate}
+      onChange={(date) => setStartDate(date)}
+      minDate={subDays(new Date(), -1)}
+      placeholderText="Select a date"
     />
   );
-};
+}
+export function Time(startTime, setStartTime) {
+  return (
+    <DatePicker
+      selected={startTime}
+      onChange={(date) => setStartTime(date)}
+      showTimeSelect
+      showTimeSelectOnly
+      placeholderText="Select time"
+      minTime={setHours(setMinutes(new Date(), 0), 16)}
+      maxTime={setHours(setMinutes(new Date(), 0), 22)}
+      dateFormat="h:mm aa"
+    />
+  );
+}
 
 export function GuestFunction() {
   let [count, setCount] = useState(1);

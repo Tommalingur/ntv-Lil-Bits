@@ -65,12 +65,11 @@ const Description = styled.div`
   font-size: 0.6rem;
 `;
 const DrinkApi = () => {
-  const [selected, setSelected] = useState(null);
+  const [dataSet, setDataSet] = useState([]);
   const [drinks, setDrinks] = useState([]);
   const getDrinks = async () => {
     const result = await axios.get("https://api.punkapi.com/v2/beers");
     setDrinks(result.data);
-    console.log(result.data);
   };
 
   useEffect(() => {
@@ -90,11 +89,12 @@ const DrinkApi = () => {
       {drinks.map((drink) => (
         <DrinkCard
           key={drink.id}
-          selected={selected}
+          selected={dataSet.includes(drink.id)}
           onClick={() => {
-            setSelected(true);
+            setDataSet([...dataSet, drink.id]);
           }}
         >
+          {console.log(dataSet)}
           <DrinkImg>
             <Image src={drink.image_url} />
           </DrinkImg>

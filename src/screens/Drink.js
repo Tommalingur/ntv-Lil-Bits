@@ -52,7 +52,7 @@ function Drink() {
           <p>Select the drink you want from here.</p>
           <p>Then check out our wide selection of drinks.</p>
           <Link to="/Order">
-            <LinkButton>Book a table!</LinkButton>
+            <LinkButton disabled={false}>Book a table!</LinkButton>
           </Link>
         </NextBox>
       </DrinkContentGrid>
