@@ -90,7 +90,8 @@ export const GuestButton = styled.button`
   }
 `;
 
-export function Calendar(startDate, setStartDate) {
+export function Calendar() {
+  const [startDate, setStartDate] = useState(null);
   return (
     <DatePicker
       selected={startDate}
@@ -100,7 +101,8 @@ export function Calendar(startDate, setStartDate) {
     />
   );
 }
-export function Time(startTime, setStartTime) {
+export function Time() {
+  const [startTime, setStartTime] = useState(null);
   return (
     <DatePicker
       selected={startTime}

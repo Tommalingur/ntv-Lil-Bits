@@ -25,13 +25,14 @@ const DishInfo = styled.div`
   justify-self: stretch;
   align-self: center;
   width: fit-content;
-  grid-template-rows: 8fr 2fr 1fr 1fr;
+  grid-template-rows: 8fr 2fr 1fr 1fr 1fr;
   grid-area: dish;
   grid-template-areas:
     "thumb"
     "meal"
     "cat"
-    "ori";
+    "ori"
+    "price";
 `;
 const MealThumb = styled.div`
   display: flex;
@@ -62,6 +63,13 @@ const Origin = styled.div`
   align-items: center;
   grid-area: ori;
 `;
+const Price = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  grid-area: price;
+`;
 const DishButton = styled.div`
   display: flex;
   justify-content: center;
@@ -71,6 +79,7 @@ const DishButton = styled.div`
 `;
 
 const DishApi = () => {
+  const DishPrice = "50.00";
   const [dishes, setDishes] = useState([]);
   const getDishes = async () => {
     const result = await axios.get(
@@ -102,6 +111,8 @@ const DishApi = () => {
           <Category>{dish.strCategory}</Category>
           <Origin>{dish.strArea}</Origin>
           {localStorage.setItem("Dishes", JSON.stringify(dish.strMeal))}
+          <Price>{DishPrice}$</Price>
+          {localStorage.setItem("DishPrice", DishPrice)}
         </DishInfo>
       ))}
 

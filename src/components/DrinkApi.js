@@ -64,7 +64,15 @@ const DrinkPairing = styled.div`
 const Description = styled.div`
   font-size: 0.6rem;
 `;
+const Price = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  grid-area: price;
+`;
 const DrinkApi = () => {
+  const DrinkPrice = 10.0;
   const [dataSet, setDataSet] = useState([]);
   const [drinks, setDrinks] = useState([]);
   const getDrinks = async () => {
@@ -74,6 +82,7 @@ const DrinkApi = () => {
 
   useEffect(() => {
     getDrinks();
+    console.log(drinks);
   }, []);
 
   if (drinks.length === 0) {
@@ -89,12 +98,12 @@ const DrinkApi = () => {
       {drinks.map((drink) => (
         <DrinkCard
           key={drink.id}
-          selected={dataSet.includes(drink.id)}
+          selected={dataSet.includes(drink.name)}
           onClick={() => {
-            setDataSet([...dataSet, drink.id]);
+            setDataSet([...dataSet, drink.name, DrinkPrice]);
+            localStorage.setItem("Drink", JSON.stringify(dataSet));
           }}
         >
-          {console.log(dataSet)}
           <DrinkImg>
             <Image src={drink.image_url} />
           </DrinkImg>
@@ -102,6 +111,7 @@ const DrinkApi = () => {
           <DrinkPercentage>Alc: {drink.abv} %</DrinkPercentage>
           <Description>{drink.description}</Description>
           <DrinkPairing>Good with: {drink.food_pairing}</DrinkPairing>
+          <Price>{DrinkPrice}$</Price>
         </DrinkCard>
       ))}
     </Wrapper>

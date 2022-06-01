@@ -84,15 +84,14 @@ const NextBox = styled.div`
 function Order() {
   const [email, setEmail] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
-  const [startDate, setStartDate] = useState(null);
-  const [startTime, setStartTime] = useState(null);
+
   const handleChange = (e) => {
     setEmail(e.target.value);
     verifyEmail();
   };
   const verifyEmail = () => {
     const regEx = /[a-zA-Z0-9.%+-]+@[a-z0-9]+\.[a-z]{2,8}(.[a-z{2,8}])?/g;
-    if (regEx.test(email) && startDate !== null && startTime !== null) {
+    if (regEx.test(email)) {
       setIsDisabled(false);
     } else {
       setIsDisabled(true);

@@ -1,5 +1,5 @@
 import ".././App.css";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
@@ -9,7 +9,7 @@ const ReceiptGrid = styled.div`
   display: grid;
   height: 100vh;
   grid-template-columns: 1fr 1.5fr 1.5fr 1fr;
-  grid-template-rows: 0.5fr 0.5fr 2.5fr 0.5fr;
+  grid-template-rows: 0.5fr 0.1fr 3fr 0.5fr;
   grid-template-areas:
     "nav nav nav nav"
     ". . . ."
@@ -19,48 +19,96 @@ const ReceiptGrid = styled.div`
 
 const ReceiptContentGrid = styled.div`
   display: grid;
-  gap: 1.5rem;
-  grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: repeat(2, 1fr);
+  margin-top: 20px;
+  grid-template-columns: repeat(5 1fr);
+  grid-template-rows: 0.5fr 4.5fr;
   grid-area: content;
   grid-template-areas:
-    "carousel carousel carousel carousel order order"
-    "f-order f-order f-order info info info";
+    ". . order . ."
+    ". receipt receipt receipt .";
 `;
 
-const CarouselBox = styled.div`
+const ReceiptBox = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 2fr 2fr;
   border: 4px solid var(--clr-secondary);
-  grid-area: carousel;
+  color: var(--clr-secondary);
+  grid-area: receipt;
+  grid-template-areas: "text text" "food drink" "food drink";
 `;
 const OrderBox = styled.div`
-  border: 4px solid var(--clr-secondary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
   grid-area: order;
 `;
-const FindOrderBox = styled.div`
-  border: 4px solid var(--clr-secondary);
-  grid-area: f-order;
+const TextBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-area: text;
+  border-bottom: 4px solid var(--clr-secondary);
 `;
-const InfoBox = styled.div`
-  border: 4px solid var(--clr-secondary);
-  grid-area: info;
+const FoodBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-self: center;
+  font-size: 0.8rem;
+`;
+const DishBox = styled.div`
+  display: inline-block;
+  text-align: left;
+  justify-content: column;
+  grid-area: food;
+`;
+const Food = styled.div``;
+const Price = styled.div``;
+const DrinkBox = styled.div`
+  display: inline-block;
+  text-align: left;
+  grid-area: drink;
 `;
 
 function Receipt() {
+  const [food, setFood] = useState([]);
+  const [drinks, setDrink] = useState([]);
+  const [dishPrice, setDishPrice] = useState([]);
+
+  useEffect(() => {
+    const food = JSON.parse(localStorage.getItem("Dishes"));
+    const dishPrice = localStorage.getItem("DishPrice");
+    const drinks = JSON.parse(localStorage.getItem("Drink"));
+    if ((food, drinks, dishPrice)) {
+      setFood(food);
+      setDrink(drinks);
+      setDishPrice(dishPrice);
+    }
+  }, []);
+  console.log(drinks);
   return (
     <ReceiptGrid>
       <Header />
       <ReceiptContentGrid>
-        <CarouselBox></CarouselBox>
         <OrderBox>
-          <h2>Book a table</h2>
-          <p>Here you can book a table for up to 10 people.</p>
-          <p>All you have to do is get here and enjoy!</p>
           <Link to="/">
-            <LinkButton>Book a table!</LinkButton>
+            <LinkButton>Return home</LinkButton>
           </Link>
         </OrderBox>
-        <FindOrderBox></FindOrderBox>
-        <InfoBox></InfoBox>
+        <ReceiptBox>
+          <TextBox>Receipt for order</TextBox>
+          <FoodBox>
+            <h2>Chosen dish:</h2>
+            <DishBox>
+              <Food>{food}</Food>
+              <Price>{dishPrice}</Price>
+            </DishBox>
+            <h2>Chosen drinks:</h2>
+            {drinks.map((drink) => (
+              <DrinkBox key={drink.id}>{drink}</DrinkBox>
+            ))}
+          </FoodBox>
+        </ReceiptBox>
       </ReceiptContentGrid>
     </ReceiptGrid>
   );
