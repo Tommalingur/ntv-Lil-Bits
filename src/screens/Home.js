@@ -1,14 +1,11 @@
 import ".././App.css";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import DemoCarousel from "../components/Carousel";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import {
-  CarouselFunction,
-  InputField,
-  LinkButton,
-} from "../components/Components";
+import { InputField, LinkButton } from "../components/Components";
+import axios from "axios";
 import { FaFacebookF } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
@@ -83,6 +80,7 @@ const InfoContent = styled.div`
 const InfoOne = styled.div`
   grid-area: one;
 `;
+
 const InfoTwo = styled.div`
   grid-area: two;
 `;
@@ -95,13 +93,62 @@ const InfoFour = styled.div`
   align-self: center;
   grid-area: four;
 `;
-const SliderImg = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-`;
 
 function Home() {
+  const [email, setEmail] = useState("");
+  const [isDisabled, setIsDisabled] = useState(true);
+  const DishPrice = 50.0;
+  const DrinkPrice = 10;
+  const [dataSet, setDataSet] = useState([]);
+  const [drinks, setDrinks] = useState([]);
+  const [dishes, setDishes] = useState([]);
+  const getDishes = async () => {
+    const result = await axios.get(
+      "https://themealdb.com/api/json/v1/1/random.php"
+    );
+    setDishes(result.data.meals);
+  };
+  useEffect(() => {
+    getDishes();
+  }, []);
+
+  {
+    localStorage.setItem("DishPrice", DishPrice);
+  }
+
+  const handleChange = (e) => {
+    setEmail(e.target.value);
+    verifyEmail();
+    localStorage.setItem("Dishes", JSON.stringify(dishes.strMeal));
+    localStorage.setItem("Guests", 2);
+    localStorage.setItem("Date", "Mon Aug 08 2022 17:00");
+  };
+
+  const getDrinks = async () => {
+    const result = await axios.get("https://api.punkapi.com/v2/beers");
+    setDrinks(result.data[0]);
+  };
+  const getData = () => {
+    setDataSet([drinks.name, DrinkPrice]);
+  };
+  useEffect(() => {
+    getDrinks();
+  }, []);
+  useEffect(() => {
+    getData();
+  }, []);
+  useEffect(() => {}, [email]);
+  localStorage.setItem("email", JSON.stringify(email));
+  const verifyEmail = () => {
+    const regEx = /[a-zA-Z0-9.%+-]+@[a-z0-9]+\.[a-z]{2,8}(.[a-z{2,8}])?/g;
+    if (regEx.test(email)) {
+      setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
+    }
+  };
+  localStorage.setItem("Drink", JSON.stringify(dataSet));
+
   return (
     <HomeGrid>
       <Header />
@@ -120,8 +167,21 @@ function Home() {
         <FindOrderBox>
           <h2>Find your order</h2>
           <p>Enter your email to find and change your order</p>
-          <InputField></InputField>
-          <LinkButton>Find order</LinkButton>
+          {dishes.map((dish) => (
+            <div key={dish.idMeal}>
+              <InputField
+                key={dish.idMeal}
+                placeholder="please enter a valid email"
+                type="email"
+                value={email}
+                onChange={handleChange}
+              ></InputField>
+              {localStorage.setItem("Dishes", JSON.stringify(dish.strMeal))}
+            </div>
+          ))}
+          <Link to={"/Receipt"}>
+            <LinkButton disabled={isDisabled}>Find order</LinkButton>
+          </Link>
         </FindOrderBox>
         <InfoBox>
           <BoxHeader>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { LinkButton } from "./Components";
 
 const Wrapper = styled.div`
@@ -79,7 +79,7 @@ const DishButton = styled.div`
 `;
 
 const DishApi = () => {
-  const DishPrice = "50.00";
+  const DishPrice = 50.0;
   const [dishes, setDishes] = useState([]);
   const getDishes = async () => {
     const result = await axios.get(
@@ -103,7 +103,7 @@ const DishApi = () => {
   return (
     <Wrapper>
       {dishes.map((dish) => (
-        <DishInfo key={dish.idMeal} selected={true}>
+        <DishInfo key={dish.idMeal}>
           <MealThumb>
             <MealImg src={dish.strMealThumb} />
           </MealThumb>

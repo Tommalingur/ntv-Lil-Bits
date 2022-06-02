@@ -5,7 +5,6 @@ import {
   InputField,
   GuestFunction,
   Calendar,
-  Time,
   LinkButton,
 } from "../components/Components";
 import styled from "styled-components";
@@ -29,14 +28,12 @@ const OrderContentGrid = styled.div`
   border: 4px solid var(--clr-secondary);
   color: var(--clr-secondary);
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(5, 1fr);
+  grid-template-rows: repeat(3, 1fr);
   grid-area: content;
   grid-template-areas:
     "head head"
     "calendar g-text"
-    "calendar guest"
-    "time input"
-    "time next";
+    "input next";
 `;
 const CalendarBox = styled.div`
   display: flex;
@@ -46,22 +43,11 @@ const CalendarBox = styled.div`
   grid-area: calendar;
   align-self: center;
 `;
-const TimeBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  color: var(--clr-secondary);
-  grid-area: time;
-`;
-const GuestTextBox = styled.div`
+const GuestBox = styled.div`
   display: grid;
   color: var(--clr-secondary);
   grid-area: g-text;
   align-self: center;
-`;
-const GuestNumberBox = styled.div`
-  color: var(--clr-secondary);
-  grid-area: guest;
-  align-items: center;
 `;
 const HeaderBox = styled.div`
   display: grid;
@@ -71,6 +57,7 @@ const HeaderBox = styled.div`
 `;
 const InputBox = styled.div`
   display: grid;
+  align-self: center;
   color: var(--clr-secondary);
   grid-area: input;
 `;
@@ -89,6 +76,8 @@ function Order() {
     setEmail(e.target.value);
     verifyEmail();
   };
+  useEffect(() => {}, [email]);
+  localStorage.setItem("email", JSON.stringify(email));
   const verifyEmail = () => {
     const regEx = /[a-zA-Z0-9.%+-]+@[a-z0-9]+\.[a-z]{2,8}(.[a-z{2,8}])?/g;
     if (regEx.test(email)) {
@@ -109,17 +98,10 @@ function Order() {
           <h2>When do you want your table?</h2>
           <Calendar />
         </CalendarBox>
-        <TimeBox>
-          <h2>At what time do you want your table?</h2>
-          <p>We close at 23:00 so the last available table is at 22:00</p>
-          <Time />
-        </TimeBox>
-        <GuestTextBox>
+        <GuestBox>
           <h2>Please select number of guests</h2>
-        </GuestTextBox>
-        <GuestNumberBox>
           <GuestFunction />
-        </GuestNumberBox>
+        </GuestBox>
         <InputBox>
           <h2>Please enter your email info</h2>
           <InputField

@@ -31,11 +31,11 @@ const ReceiptContentGrid = styled.div`
 const ReceiptBox = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 2fr 2fr;
+  grid-template-rows: 1fr 4fr;
   border: 4px solid var(--clr-secondary);
   color: var(--clr-secondary);
   grid-area: receipt;
-  grid-template-areas: "text text" "food drink" "food drink";
+  grid-template-areas: "text text" "receipt receipt" "receipt receipt" "receipt receipt";
 `;
 const OrderBox = styled.div`
   display: flex;
@@ -55,18 +55,26 @@ const FoodBox = styled.div`
   flex-direction: column;
   justify-self: center;
   font-size: 0.8rem;
+  grid-area: receipt;
 `;
 const DishBox = styled.div`
-  display: inline-block;
-  text-align: left;
-  justify-content: column;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
   grid-area: food;
 `;
-const Food = styled.div``;
-const Price = styled.div``;
+const Food = styled.div`
+  justify-self: center;
+`;
+const Price = styled.div`
+  justify-self: center;
+  text-align: center;
+`;
 const DrinkBox = styled.div`
-  display: inline-block;
-  text-align: left;
+  display: flex;
+  text-align: center;
+  justify-content: center;
   grid-area: drink;
 `;
 
@@ -74,18 +82,39 @@ function Receipt() {
   const [food, setFood] = useState([]);
   const [drinks, setDrink] = useState([]);
   const [dishPrice, setDishPrice] = useState([]);
+  const [date, setDate] = useState("");
+  const [email, setEmail] = useState("");
+  const [guests, setGuests] = useState(null);
 
   useEffect(() => {
     const food = JSON.parse(localStorage.getItem("Dishes"));
     const dishPrice = localStorage.getItem("DishPrice");
     const drinks = JSON.parse(localStorage.getItem("Drink"));
+    const date = localStorage.getItem("Date");
+    const email = JSON.parse(localStorage.getItem("email"));
+    const guests = JSON.parse(localStorage.getItem("Guests"));
     if ((food, drinks, dishPrice)) {
       setFood(food);
       setDrink(drinks);
       setDishPrice(dishPrice);
+      setDate(date);
+      setEmail(email);
+      setGuests(guests);
     }
   }, []);
-  console.log(drinks);
+
+  let drinksList = Object.entries(drinks);
+
+  let drinkPrice = drinksList.filter((element, index) => {
+    return index % 2 === 1;
+  });
+  let drinksPriceSum = drinkPrice.reduce(function (prev, current) {
+    return prev + +current[1];
+  }, 0);
+  let totalPrice = drinksPriceSum + parseInt(dishPrice);
+
+  let dateString = date.substring(0, 24);
+
   return (
     <ReceiptGrid>
       <Header />
@@ -104,9 +133,13 @@ function Receipt() {
               <Price>{dishPrice}</Price>
             </DishBox>
             <h2>Chosen drinks:</h2>
-            {drinks.map((drink) => (
-              <DrinkBox key={drink.id}>{drink}</DrinkBox>
+            {drinksList.map((drink) => (
+              <DrinkBox key={drink[0]}>{drink[1]}</DrinkBox>
             ))}
+            <h2>Total Price: {totalPrice}$</h2>
+            <h3>Guests: {guests}</h3>
+            <h3>Date: {dateString}</h3>
+            <h3>Email: {email}</h3>
           </FoodBox>
         </ReceiptBox>
       </ReceiptContentGrid>

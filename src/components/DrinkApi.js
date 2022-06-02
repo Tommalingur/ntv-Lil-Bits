@@ -72,7 +72,7 @@ const Price = styled.div`
   grid-area: price;
 `;
 const DrinkApi = () => {
-  const DrinkPrice = 10.0;
+  const DrinkPrice = 10;
   const [dataSet, setDataSet] = useState([]);
   const [drinks, setDrinks] = useState([]);
   const getDrinks = async () => {
@@ -82,8 +82,10 @@ const DrinkApi = () => {
 
   useEffect(() => {
     getDrinks();
-    console.log(drinks);
   }, []);
+
+  useEffect(() => {}, [dataSet]);
+  localStorage.setItem("Drink", JSON.stringify(dataSet));
 
   if (drinks.length === 0) {
     return (
@@ -101,7 +103,6 @@ const DrinkApi = () => {
           selected={dataSet.includes(drink.name)}
           onClick={() => {
             setDataSet([...dataSet, drink.name, DrinkPrice]);
-            localStorage.setItem("Drink", JSON.stringify(dataSet));
           }}
         >
           <DrinkImg>

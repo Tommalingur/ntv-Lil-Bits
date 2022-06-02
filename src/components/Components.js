@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
-import Order from "../screens/Order";
 import DatePicker from "react-datepicker";
 import subDays from "date-fns/subDays";
 import setHours from "date-fns/setHours";
@@ -54,10 +53,11 @@ export const LinkButton = styled.button`
   ${({ disabled }) =>
     disabled &&
     css`
-      background-color: blue;
+      background-color: grey;
+      border: 3px solid var(--clr-secondary);
       cursor: default;
       &:hover {
-        background-color: blue;
+        background-color: grey;
       }
     `}
 `;
@@ -91,35 +91,28 @@ export const GuestButton = styled.button`
 `;
 
 export function Calendar() {
-  const [startDate, setStartDate] = useState(null);
+  const [startDate, setStartDate] = useState(new Date());
+  useEffect(() => {}, [startDate]);
+  localStorage.setItem("Date", startDate);
   return (
     <DatePicker
       selected={startDate}
       onChange={(date) => setStartDate(date)}
-      minDate={subDays(new Date(), -1)}
-      placeholderText="Select a date"
-    />
-  );
-}
-export function Time() {
-  const [startTime, setStartTime] = useState(null);
-  return (
-    <DatePicker
-      selected={startTime}
-      onChange={(date) => setStartTime(date)}
       showTimeSelect
-      showTimeSelectOnly
-      placeholderText="Select time"
+      minDate={subDays(new Date(), -1)}
+      timeFormat="HH:mm"
       minTime={setHours(setMinutes(new Date(), 0), 16)}
       maxTime={setHours(setMinutes(new Date(), 0), 22)}
-      dateFormat="h:mm aa"
+      timeCaption="time"
+      dateFormat="MMMM d, yyyy h:mm aa"
     />
   );
 }
 
 export function GuestFunction() {
   let [count, setCount] = useState(1);
-
+  useEffect(() => {}, [count]);
+  localStorage.setItem("Guests", JSON.stringify(count));
   function incrementCount() {
     if (count == 10) {
       setCount(count(10));
